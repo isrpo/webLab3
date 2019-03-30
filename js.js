@@ -1,4 +1,17 @@
-workWithCanvas();
+createCanvas();
+
+function createCanvas() {
+    let parentEl = document.body;
+    let  can = document.createElement('canvas');
+    can.id = 'can';
+    can.width = 600;
+    can.height = 600;
+    can.innerHTML;
+
+    parentEl.appendChild(can);
+
+    workWithCanvas();
+}
 
 function workWithCanvas() {
     let can = document.getElementById('can');
@@ -95,13 +108,6 @@ function workWithCanvas() {
 
     wrapText(ctx, text, marginLeft, marginTop, maxWidth, lineHeight);
 
-// function sleep(miliseconds) {
-//     var currentTime = new Date().getTime();
-//
-//     while (currentTime + miliseconds >= new Date().getTime()) {
-//     }
-// }
-
     function wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight)
     {
         let words = text.split(" ");
@@ -121,5 +127,22 @@ function workWithCanvas() {
             }
         }
         context.fillText(line, marginLeft, marginTop);
+
+        createButtonDownload();
     }
+}
+
+function createButtonDownload() {
+    let parentEl = document.body;
+    let  btn = document.createElement('button');
+    btn.id = 'btn';
+    btn.setAttribute('onclick', 'download()')
+    // btn.onclick = 'download()';
+    btn.innerHTML = 'Download';
+
+    parentEl.appendChild(btn);
+}
+
+function download() {
+    alert("Work!");
 }
