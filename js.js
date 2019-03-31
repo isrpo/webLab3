@@ -41,13 +41,13 @@ function workWithCanvas() {
     // }
 
     xhr.open('GET', "https://source.unsplash.com/random/300x300", false);
-    // xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
     xhr.send();
 
     if (xhr.status != 200) {
         alert( xhr.status + ': ' + xhr.statusText );
     } else {
         let img = new Image;
+        img.crossOrigin = 'anonymous';
         img.src = xhr.responseURL;
 
         img.onload = function() {
@@ -62,6 +62,7 @@ function workWithCanvas() {
         alert( xhr.status + ': ' + xhr.statusText );
     } else {
         let img = new Image;
+        img.crossOrigin = 'anonymous';
         img.src = xhr.responseURL;
 
         img.onload = function() {
@@ -76,6 +77,7 @@ function workWithCanvas() {
         alert( xhr.status + ': ' + xhr.statusText );
     } else {
         let img = new Image;
+        img.crossOrigin = 'anonymous';
         img.src = xhr.responseURL;
 
         img.onload = function() {
@@ -90,6 +92,7 @@ function workWithCanvas() {
         alert( xhr.status + ': ' + xhr.statusText );
     } else {
         let img = new Image;
+        img.crossOrigin = 'anonymous';
         img.src = xhr.responseURL;
 
         img.onload = function() {
@@ -100,9 +103,6 @@ function workWithCanvas() {
     xhr.open('GET', 'https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=text&lang=ru', false);
     xhr.send();
 
-    // xhr.open('GET', 'https://andruxnet-random-famous-quotes.p.rapidapi.com/?cat=famous&count=1', false);
-    // xhr.setRequestHeader("X-RapidAPI-Key", "68097a5a18msh63b4b968be06f12p1b1a04jsn665f03b6854f");
-    // xhr.send();
     let text = xhr.responseText;
 
     let maxWidth = 500;
@@ -134,6 +134,8 @@ function workWithCanvas() {
         }
         context.fillText(line, marginLeft, marginTop);
 
+        ctx.restore();
+
         createButtonDownload();
     }
 }
@@ -147,42 +149,22 @@ function createButtonDownload() {
     parentEl = document.getElementsByClassName('btnDiv')[0];
     let  btn = document.createElement('button');
     btn.id = 'btn';
-    btn.setAttribute('onclick', 'download()')
+    btn.setAttribute('onclick', 'downloadImg()')
     btn.innerHTML = 'Download';
 
     parentEl.appendChild(btn);
 }
 
-// function saveImage(image) {
-//     let link = document.createElement("a");
-//
-//     link.setAttribute("href", image.src);
-//     link.setAttribute("download", "canvasImage");
-//     link.click();
-// }
-//
-// function getImage(canvas){
-//     let image = new Image();
-//     image.crossOrigin = "Anonymous";
-//     // let imageData = canvas.toDataURL();
-//     image.src = canvas.toDataURL();
-//     return image;
-// }
 
-function download() {
-    let canvas = document.getElementById('can');
-    canvas = canvas.getContext('2d');
-    let button = document.getElementById('btn');
+function downloadImg() {
+    let imageData = document.getElementById("can").toDataURL("data:image/png;");
     let image = new Image();
-    image.setAttribute('crossOrigin','anonymous');
-    try {
-        button.download = "collage.png";
-        button.href = canvas.canvas.toDataURL("data:image/png;");
-    } catch (e) {
-        alert(e);
-    }
+    image.src = imageData;
+    let link = document.createElement("a");
 
-
-    // let image = getImage(document.getElementById("can"));
-    // saveImage(image);
+    link.setAttribute("href", image.src);
+    link.setAttribute("download", "collage.png");
+    link.innerHTML;
+    document.body.appendChild(link);
+    link.click();
 }
