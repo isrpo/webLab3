@@ -18,126 +18,118 @@ function workWithCanvas() {
     let can = document.getElementById('can');
     let ctx = can.getContext('2d');
 
+    let xhr4 = new XMLHttpRequest();
+    xhr4.open('GET', 'https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=text&lang=ru', true);
+    xhr4.send();
+
+    let text;
+    xhr4.onload = function() {
+        text = xhr4.responseText;
+    };
+
+    let flag = 0;
+
     let xhr = new XMLHttpRequest();
 
-    // Почему это не работает?!
-
-    // let images = [];
-    // for (var i = 0; i < 4; i++) {
-    //     xhr.open('GET', "https://source.unsplash.com/random/" + (300 + i).toString() + "x" +
-    //         (300 + i).toString(), false);
-    //     xhr.send();
-    //
-    //     if (xhr.status != 200) {
-    //         alert( xhr.status + ': ' + xhr.statusText );
-    //     } else {
-    //         let img = new Image;
-    //         img.src = xhr.responseURL;
-    //
-    //         img.onload = function() {
-    //             ctx.drawImage(img, i === 2|| i === 0 ? 0 : 300, i > 1 ? 300 : 0);
-    //         }
-    //     }
-    // }
-
-    xhr.open('GET', "https://source.unsplash.com/random/300x300", false);
+    xhr.open('GET', "https://source.unsplash.com/random/300x300", true);
     xhr.send();
 
-    if (xhr.status != 200) {
-        alert( xhr.status + ': ' + xhr.statusText );
-    } else {
+    xhr.onload = function () {
         let img = new Image;
         img.crossOrigin = 'anonymous';
-        img.src = xhr.responseURL;
 
         img.onload = function() {
             ctx.drawImage(img, 0,0);
-        }
-    }
+            flag++;
+            if (flag > 3) {
+                wrapText(ctx, text);
+            }
+        };
+        img.src = xhr.responseURL;
+    };
 
-    xhr.open('GET', "https://source.unsplash.com/random/300x301", false);
-    xhr.send();
+    let xhr1 = new XMLHttpRequest();
+    xhr1.open('GET', "https://source.unsplash.com/random/300x301", true);
+    xhr1.send();
 
-    if (xhr.status != 200) {
-        alert( xhr.status + ': ' + xhr.statusText );
-    } else {
+    xhr1.onload = function () {
         let img = new Image;
         img.crossOrigin = 'anonymous';
-        img.src = xhr.responseURL;
 
         img.onload = function() {
             ctx.drawImage(img, 300,0);
-        }
-    }
+            flag++;
+            if (flag > 3) {
+                wrapText(ctx, text);
+            }
+        };
+        img.src = xhr1.responseURL;
+    };
 
-    xhr.open('GET', "https://source.unsplash.com/random/300x302", false);
-    xhr.send();
+    let xhr2 = new XMLHttpRequest();
+    xhr2.open('GET', "https://source.unsplash.com/random/300x302", true);
+    xhr2.send();
 
-    if (xhr.status != 200) {
-        alert( xhr.status + ': ' + xhr.statusText );
-    } else {
+    xhr2.onload = function () {
         let img = new Image;
         img.crossOrigin = 'anonymous';
-        img.src = xhr.responseURL;
 
         img.onload = function() {
             ctx.drawImage(img, 0,300);
-        }
-    }
+            flag++;
+            if (flag > 3) {
+                wrapText(ctx, text);
+            }
 
-    xhr.open('GET', "https://source.unsplash.com/random/300x303", false);
-    xhr.send();
+        };
+        img.src = xhr2.responseURL;
+    };
 
-    if (xhr.status != 200) {
-        alert( xhr.status + ': ' + xhr.statusText );
-    } else {
+    let xhr3 = new XMLHttpRequest();
+    xhr3.open('GET', "https://source.unsplash.com/random/300x303", true);
+    xhr3.send();
+
+    xhr3.onload = function () {
         let img = new Image;
         img.crossOrigin = 'anonymous';
-        img.src = xhr.responseURL;
 
         img.onload = function() {
             ctx.drawImage(img, 300,300);
-        }
+            flag++;
+            if (flag > 3) {
+                wrapText(ctx, text);
+            }
+        };
+        img.src = xhr3.responseURL;
     }
+}
 
-    xhr.open('GET', 'https://cors-anywhere.herokuapp.com/https://api.forismatic.com/api/1.0/?method=getQuote&format=text&lang=ru', false);
-    xhr.send();
-
-    let text = xhr.responseText;
-
+function wrapText(context, text) {
     let maxWidth = 500;
     let lineHeight = 25;
     let marginLeft = 300;
     let marginTop = 275;
-    ctx.font = "bold 16pt Calibri";
-    ctx.fillStyle = "#fff";
-
-    wrapText(ctx, text, marginLeft, marginTop, maxWidth, lineHeight);
-
-    function wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight)
-    {
-        let words = text.split(" ");
-        let countWords = words.length;
-        let line = "";
-        context.textAlign = "center";
-        for (var n = 0; n < countWords; n++) {
-            let testLine = line + words[n] + " ";
-            let testWidth = context.measureText(testLine).width;
-            if (testWidth > maxWidth) {
-                context.fillText(line, marginLeft, marginTop);
-                line = words[n] + " ";
-                marginTop += lineHeight;
-            }
-            else {
-                line = testLine;
-            }
+    context.font = "bold 16pt Calibri";
+    context.fillStyle = "#ffffff";
+    let words = text.split(" ");
+    let countWords = words.length;
+    let line = "";
+    context.textAlign = "center";
+    for (var n = 0; n < countWords; n++) {
+        let testLine = line + words[n] + " ";
+        let testWidth = context.measureText(testLine).width;
+        if (testWidth > maxWidth) {
+            context.fillText(line, marginLeft, marginTop);
+            line = words[n] + " ";
+            marginTop += lineHeight;
         }
-        context.fillText(line, marginLeft, marginTop);
-
-        ctx.restore();
-
-        createButtonDownload();
+        else {
+            line = testLine;
+        }
     }
+    context.fillText(line, marginLeft, marginTop);
+
+    createButtonDownload();
 }
 
 function createButtonDownload() {
